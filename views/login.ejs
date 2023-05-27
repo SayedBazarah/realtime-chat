@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real time web chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://kit.fontawesome.com/04314d908b.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/login.js"></script>
+  </head>
+  <body>
+    <div class="w-screen h-screen flex justify-center items-center">
+      <form id="login" class="flex flex-col gap-4">
+        <div class="flex flex-col items-center">
+          <label
+            for="dropzone-file"
+            class="relative flex flex-col items-center justify-center w-[200px] h-[200px] rounded-full border-2 border-gray-300 border-dashed cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+          >
+            <img
+              id="profileImg"
+              class="rounded-full w-[180px] h-[180px] border-2 border-white object-contain"
+              src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAHkAeQMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAABQYBAwQCB//EADcQAAICAQEFBAYIBwAAAAAAAAABAgMEEQUSITFRE0FhcSIyM0JSsRQ0YpGhwdHhI1RzgYOS8f/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD7iAAABhtRTbeiQGQRmTtauDcaFvvq+C/cjrszIufpWy0fux4ICwztrh684x85JGv6XjfzFX+6K0ALRC6qfqWQl5STNhUzdTlX0+ztkl05oCzAisbaybUciOn2o/oScJxnFShJSi+TQHoAAAAAAMSeibfBLmwPF1sKa3Ox6RRA5ubPJenq190evmZz8t5VvD2cfVXXxOQAAd2Ds+WTFWTlpXvaad7A4QWanFopWldUV46asxPDxpy3pUwb8gK0Cw3bPx7K3GNag/iiuJwZey+yqdlM3LdWrT5/2AjTfi5VmNPWD1i+cXyZoAFmxsivIr3635rvRuK1iZM8a5TjxXKS6osVVkba4zg9YyWqA9gAARu2cjcqVEX6U+L8iSK3n29tl2S14J6LyQHOAABZ8atVY9da92KKyWpcgMgAAYmt6LSemq016GQBVrIOqycHxcW1qeDblPXJtf238zUAJTYuRpKWPJ8Hxj+ZFnumx1WwsXOL1AtIMRakk1yfIyB4un2dM5/DFsqxZs36nf8A05fIrIAAACz40nLHrlJNNxWqZWU9HqWqElKKkuTWqAyAAAAAq1r1tm+smzwbcqSlk2yXJzfzNQAAAWPZ09/Cqb+HT7uB0nHsn6hX5y+bOwDXkR36LIfFFr8CrlsKzl1djk2Q04KXDyA0gAATWx8mVsHVNezS0fgQp27JsdeZFd004sCfAAA49p5MsahOCW9J6J9PE7CF23ZvXQq7orX7/wDgEaAAAB6rg7JxhHnJ6ICw7Nju4NS8Nfv4nSeYRUIRiuUUkj0AIrbWPrGN8Vy9GX5EqeZwU4OElrGS0aAqoO2ezrFldjGUVrxi5d6OynZEFxtscvCPBAQx3bOxr/pNVnZyUE+LfAmKcamn2dcU+unE3AAAAIbauNdPJdsK5SjupariTIAqmj10a0fRmC0W0VXL+LXGXmjhu2RVLjVKUH05oCFJLY2O52u5r0YcF5mmzZ10MiFSlGTn07l1ZOY9UaKo1w5R/EDYAAAAA1ZFMboaS1TT1jJc4vqjXVfKElTk6Rn7s/dn+/gdJ4srhbFxsipRfcwPYOXs78f2Mu1r+Cb4ryf6mY5tWu7brVLpYtPx5AdIMRkpLWLTXVMyABhtJat6I0TzKYvdjJ2S+GtbzA6DnuyN2fZUx7S34e6Pizy1k38H/ArfTjN/kjdTTCmO7XHRd/V+YHjHo7LWUpb1svWn1/Y3gAAAAAAAAADEoqS0kk10ZkAc8sLGb17KKfWPD5GPoVPW1f5ZfqdIA5lg4yerq3n9puXzN8IRgtIRUV0S0PQAAAAAAAAA/9k="
+              alt="user"
+            />
+            <div
+              class="z-50 invisible hover:visible text-white font-bold absolute top-0 bottom-0 right-0 left-0 flex justify-center items-center"
+            >
+              Change
+            </div>
+            <input id="dropzone-file" type="file" class="hidden" />
+          </label>
+        </div>
+        <div>
+          <input
+            type="text"
+            placeholder="Your Name"
+            class="border outline-none rounded-md py-2 px-3 text-center"
+          />
+        </div>
+        <div class="">
+          <input
+            type="submit"
+            value="START CHAT"
+            class="bg-gray-700 hover:bg-gray-400 rounded-md text-center text-white w-full py-2"
+          />
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

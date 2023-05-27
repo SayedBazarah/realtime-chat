@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real time web chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://kit.fontawesome.com/04314d908b.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/chat.js" defer></script>
+    <style>
+      .overflow-y-scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .overflow-y-scroll {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="container"
+      class="grid grid-cols-2 md:grid-cols-7 lg:grid-cols-4 gap-4 mx-5 my-2 items-start"
+    >
+      <!-- AVILABLE USERS & NOTIFICATION AREA -->
+      <div
+        class="flex flex-col border border-gray-400 rounded-xl md:col-span-2"
+      >
+        <section
+          class="w-full bg-gray-300 px-5 py-4 rounded-t-xl border-b-[1px] border-gray-400"
+        >
+          <label
+            class="w-full relative inline-flex items-center cursor-pointer"
+          >
+            <input
+              id="notification"
+              type="checkbox"
+              value=""
+              class="sr-only peer"
+            />
+            <div
+              class="mb-[15px] w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+            ></div>
+            <span
+              class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >Desktop Notifications</span
+            >
+          </label>
+        </section>
+        <!-- ACTIVE USERS -->
+        <section id="active" class="flex flex-col gap-4 p-5"></section>
+      </div>
+      <!-- CURRENT USER & MESSAGES AREA -->
+      <div
+        class="relative flex flex-col h-[95vh] border border-gray-400 rounded-xl bg-blue-600 md:col-span-5 lg:col-span-3"
+      >
+        <section
+          class="w-full h-[62px] bg-gray-300 px-5 py-4 rounded-t-xl border-b-[1px] border-gray-400 flex justify-between items-center w-full"
+        >
+          <div class="flex gap-3 items-center">
+            <img
+              class="rounded-full w-11 h-11 border-2 border-white"
+              src="data:image/jpeg;base64,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"
+              alt="user"
+            />
+            <div id="currentUser">${state.username}</div>
+          </div>
+          <div>
+            <i class="fas fa-search cursor-pointer"></i>
+          </div>
+        </section>
+        <!-- MESSAGES AREA -->
+        <section
+          id="messages"
+          class="h-full bg-white p-3 flex flex-col gap-2 overflow-y-scroll"
+        >
+          <!-- Message -->
+        </section>
+        <section class="flex p-3 bg-gray-300" id="messageForm">
+          <div
+            class="w-full flex items-center gap-1 bg-white rounded-l-lg pr-2"
+          >
+            <input
+              type="text"
+              id="message"
+              placeholder="Say something..."
+              class="w-full p-2 rounded-lg outline-none"
+            />
+            <!-- UPLOADING & PREVIEW MEDIA -->
+            <div
+              id="uploadArea"
+              class="hidden absolute w-full top-[62px] bottom-[60px] right-0 grid grid-rows-12"
+            >
+              <div class="row-span-3 bg-gray-200 grid grid-rows-12"></div>
+              <div class="flex flex-col items-center row-span-9">
+                <label
+                  for="dropzone-file"
+                  class="relative flex flex-col items-center justify-center w-full h-[100%] border-2 border-gray-300 border-dashed cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                >
+                  <div>Drag & Drop Your Images</div>
+                  <div
+                    class="z-10 invisible hover:visible text-white font-bold absolute top-0 bottom-0 right-0 left-0 flex justify-center items-center"
+                  >
+                    Change
+                  </div>
+                  <input
+                    id="dropzone-file"
+                    type="file"
+                    class="hidden"
+                    multiple
+                  />
+                </label>
+              </div>
+            </div>
+            <button class="p-1">
+              <i class="fa-solid fa-paperclip"></i>
+            </button>
+            <button class="p-1">
+              <i class="fa-solid fa-microphone-lines"></i>
+            </button>
+            <button class="hidden text-red-500">
+              <i class="fa-solid fa-square"></i>
+            </button>
+          </div>
+          <button class="h-full px-5 rounded-r-lg bg-green-600 text-white">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+          <div
+            id="audioArea"
+            class="absolute w-full bottom-[63px] right-0 left-0 grid grid-rows-12 justify-center"
+          ></div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
